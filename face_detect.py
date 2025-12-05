@@ -4,7 +4,7 @@ import sys
 
 def detect_faces():
     # 1. Define input and output filenames
-    input_image_path = 'input.jpg'
+    input_image_path = 'frame_1.jpg'
     output_image_path = 'output.jpg'
 
     # 2. Check if input image exists
