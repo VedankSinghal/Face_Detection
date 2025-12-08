@@ -2,7 +2,7 @@ import cv2
 import os
 import sys
 
-def detect_faces(input_path='input.jpg', output_path='output.jpg'):
+def detect_faces(input_path='frame_1.png', output_path='output.jpg'):
     # 1. Check if input image exists
     if not os.path.exists(input_path):
         print(f"Error: {input_path} not found!")
