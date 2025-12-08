@@ -1,40 +1,60 @@
-name: Face Detection CI
+name: Face Detection & Coverage CI
 
-# Trigger this pipeline whenever we push code to the main branch
+# Trigger on push to main
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build-and-detect:
+  build-test-detect:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the repository code onto the runner
+    # 1. Get the code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
+    # 2. Setup Python
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
-    # Step 3: Install dependencies (OpenCV)
+    # 3. Install Libraries (OpenCV, Pytest, Coverage)
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    # Step 4: Run the Face Detection script
-    # This script will look for 'input.jpg' and generate 'output.jpg'
-    - name: Run Face Detection
+    # 4. RUN TESTS & GENERATE LCOV REPORT
+    # --cov=face_detect: Measure coverage for 'face_detect.py'
+    # --cov-report=lcov: Generate the 'coverage.lcov' file you requested
+    # --cov-report=html: Generate a visual HTML report website
+    - name: Run Tests with Coverage
+      run: |
+        pytest --cov=face_detect --cov-report=lcov --cov-report=html test_face_detect.py
+        
+    # 5. Run the actual script on your real image (for the bounding box visual)
+    - name: Run Real Face Detection
       run: python face_detect.py
 
-    # Step 5: Upload the result so you can see it
-    # This takes the 'output.jpg' generated in Step 4 and lets you download it from GitHub
-    - name: Upload Output Image
+    # 6. Upload the LCOV file (Technical Report)
+    - name: Upload LCOV Report
       uses: actions/upload-artifact@v4
       with:
-        name: detected-faces-result
+        name: lcov-report
+        path: coverage.lcov
+
+    # 7. Upload the HTML Report (Visual Coverage Website)
+    - name: Upload HTML Coverage Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: html-coverage-report
+        path: htmlcov/
+
+    # 8. Upload the Detected Face Image (Visual Result)
+    - name: Upload Detected Face
+      uses: actions/upload-artifact@v4
+      with:
+        name: detected-face-image
         path: output.jpg
