@@ -55,4 +55,4 @@ def test_real_image_exists():
     Test 3: Checks if your real 'input.jpg' is actually in the repo.
     This is just a sanity check for your project.
     """
-    assert os.path.exists('input.jpg') == True
+    assert os.path.exists('frame_1.png') == True
